@@ -1,24 +1,54 @@
-import logo from './logo.svg';
+import Keypad from './components/Keypad'
+import Results from './components/Results'
+import {useState,useEffect}  from 'react'
 import './App.css';
 
 function App() {
+  const [currentValue,setCurrentValue] = useState('')
+  const [results,setResults] = useState('')
+
+  useEffect(() => {
+    setCurrentValue(results)
+
+  }, [results])
+
+  const calculate = () => {
+    const total = eval(currentValue)
+    setResults(total)
+  }
+
+
+  const changeNumberSign = () => setCurrentValue((num) => num * -1)
+
+  const reset = () =>{
+    setCurrentValue('')
+  }
+
+  const onClick = keyValue => { 
+    switch(keyValue) {
+      case '=':
+      calculate()
+          break;
+      case 'AC':
+        reset()
+          break;
+      case '+/-':
+          changeNumberSign(currentValue)
+        break;
+      default:
+        setCurrentValue(() => currentValue + keyValue)
+          break;
+  }
+
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ height: '100%', display: 'flex',justifyContent: 'center',alignItems: 'center'}}>
+      <div className="App">
+   <Results value={currentValue}/>
+   <Keypad onClick={onClick}/>
     </div>
+    </div>
+
   );
 }
 
